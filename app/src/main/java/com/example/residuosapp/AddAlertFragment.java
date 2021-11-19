@@ -1,12 +1,19 @@
 package com.example.residuosapp;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +36,8 @@ public class AddAlertFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int COD_SELECCIONA = 10;
+    private static final int COD_FOTO = 20;
 
 
     private String mParam1;
@@ -37,6 +46,9 @@ public class AddAlertFragment extends Fragment {
     GoogleMap mapAdd;
 
     LatLng positionAlert;
+
+    ImageButton buttonUp;
+    ImageView imgFoto;
 
 
 
@@ -68,12 +80,25 @@ public class AddAlertFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_addalert,
                 container, false);
+        //Carga Imagen ----------------
+
+        buttonUp = view.findViewById(R.id.imageButtonUp);
+        imgFoto=(ImageView)view.findViewById(R.id.imgEvidence1);
+        buttonUp.setOnClickListener(this::upImage);
+
+
+        ///---------------------------
+
+
+
+
         Button button = view.findViewById(R.id.btn_report);
         button.setOnClickListener(this::sendEmail);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapViewAddAlert);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
+
 
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -93,6 +118,10 @@ public class AddAlertFragment extends Fragment {
         });
 
 
+
+
+
+
         return view;
     }
 
@@ -101,6 +130,47 @@ public class AddAlertFragment extends Fragment {
         super.onResume();
         TextView toolbarT = getActivity().findViewById(R.id.toolbar_title);
         toolbarT.setText("Nueva alerta");
+    }
+
+    public void upImage(View v){
+        final CharSequence[] opciones={"Tomar Foto","Elegir de Galeria","Cancelar"};
+        final AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        builder.setTitle("Elige una Opción");
+        builder.setItems(opciones, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(opciones[i].equals("Tomar Foto")){
+                    //Activar camara
+
+                }
+                else{
+                    if (opciones[i].equals("Elegir de Galeria")){
+                        Intent intent=new Intent(Intent.ACTION_GET_CONTENT,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/");
+                        startActivityForResult(intent.createChooser(intent,"Seleccione"), COD_SELECCIONA);
+                    }
+                    else{
+                        dialogInterface.dismiss();
+                    }
+                }
+            }
+        });
+        builder.show();
+
+
+        //Toast.makeText(getContext(),"Mostrar opciones",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        switch (requestCode){
+            case COD_SELECCIONA:
+                Uri miPath=data.getData();
+                imgFoto.setImageURI(miPath);
+                break;
+        }
     }
 
     public void sendEmail(View v){

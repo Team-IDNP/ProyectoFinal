@@ -101,7 +101,7 @@
                 tools:layout_margin="10dp">
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/imgEvidence1"
                     android:layout_width="85dp"
                     android:layout_height="75dp"
                     android:src="@android:drawable/ic_menu_gallery" />
@@ -118,11 +118,13 @@
                     android:layout_height="75dp"
                     android:src="@android:drawable/ic_menu_gallery" />
 
-                <ImageView
-                    android:id="@+id/imageView7"
+                <ImageButton
+                    android:id="@+id/imageButtonUp"
                     android:layout_width="62dp"
                     android:layout_height="match_parent"
-                    android:src="@android:drawable/ic_menu_upload" />
+                    android:layout_weight="1"
+                    android:src="@android:drawable/stat_sys_upload" />
+
             </LinearLayout>
 
             <TextView
