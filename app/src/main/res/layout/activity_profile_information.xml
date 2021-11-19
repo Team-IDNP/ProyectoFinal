@@ -81,6 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorSecondaryVariant"
+                android:onClick="cerrarSesion"
                 android:text="Salir de cuenta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
         </LinearLayout>
