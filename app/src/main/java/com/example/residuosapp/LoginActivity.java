@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         // Login con Firebase
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("416598100478-kplhfvnpmvml8cqev7vuf2bmqg8aqlko.apps.googleusercontent.com")
+                .requestIdToken(getString(R.string.OAuthKey))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
