@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorOnPrimary"
+    tools:context=".AddAlertFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:gravity="bottom|fill_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="69dp"
+                android:layout_height="16dp"
+                android:text="Lugar"
+                tools:layout_marginTop="30dp" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="81dp"
+                android:layout_margin="10dp"
+                android:background="?attr/colorSecondary"
+                android:gravity="center">
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="59dp">
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Departamento"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="97dp"
+                        android:layout_height="wrap_content"
+                        android:text="Provincia"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="81dp"
+                        android:layout_height="wrap_content"
+                        android:text="Distrito"
+                        android:textAlignment="center" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Spinner
+                        android:id="@+id/Departamento"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+
+                    <Spinner
+                        android:id="@+id/Provincia"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+
+                    <Spinner
+                        android:id="@+id/Distrito"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Imagen" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colorSecondary"
+                android:orientation="horizontal"
+                tools:layout_margin="10dp">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="85dp"
+                    android:layout_height="75dp"
+                    android:src="@android:drawable/ic_menu_gallery" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="85dp"
+                    android:layout_height="75dp"
+                    android:src="@android:drawable/ic_menu_gallery" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="85dp"
+                    android:layout_height="75dp"
+                    android:src="@android:drawable/ic_menu_gallery" />
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="62dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/ic_menu_upload" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ubicación" />
+
+            <fragment
+                android:id="@+id/mapViewAddAlert"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="316dp"
+                android:layout_height="321dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp" />
+
+            <Button
+                android:id="@+id/btn_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorSecondaryVariant"
+                android:text="Reportar" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

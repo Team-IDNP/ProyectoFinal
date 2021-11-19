@@ -1,4 +1,4 @@
-package com.example.proyectofinal;
+package com.dibujo.residuosapp;
 
 import org.junit.Test;
 

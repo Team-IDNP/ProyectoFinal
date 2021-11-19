@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="333dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.335">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="234dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="40dp"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:text="Iniciar sesión con correo electrónico"
+            android:textStyle="bold"
+            tools:layout_gravity="center" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="349dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="casual"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="casual"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#7C215B"
+            android:fontFamily="casual"
+            android:onClick="login"
+            android:text="Iniciar sesión"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textStyle="bold"
+            app:strokeWidth="3dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:fontFamily="casual"
+            android:onClick="register"
+            android:text="¿Necesito una cuenta?"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            app:strokeWidth="3dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="223dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:fontFamily="casual"
+            android:text="Continuar con Google"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_launcher_background"
+            app:iconPadding="0dp"
+            app:iconSize="35dp"
+            app:iconTint="#951F1F"
+            app:strokeWidth="3dp" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#025AEA"
+            android:fontFamily="casual"
+            android:text="Continuar con Facebook"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_launcher_background"
+            app:iconPadding="0dp"
+            app:iconSize="35dp"
+            app:iconTint="#951F1F"
+            app:strokeWidth="3dp" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#025AEA"
+            android:fontFamily="casual"
+            android:text="Continuar con Twiter"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_launcher_background"
+            app:iconPadding="0dp"
+            app:iconSize="35dp"
+            app:iconTint="#951F1F"
+            app:strokeWidth="3dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
