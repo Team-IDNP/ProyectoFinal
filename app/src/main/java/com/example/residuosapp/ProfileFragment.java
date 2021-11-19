@@ -50,9 +50,6 @@ public class ProfileFragment extends Fragment {
         }
 
 
-
-
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -117,7 +114,7 @@ public class ProfileFragment extends Fragment {
         toolbarT.setText("Michael Jordan");
     }
 
-    public void openInformationProfile(View v){
+    public void openInformationProfile(View v) {
         Intent intent = new Intent(getActivity(), ProfileInformationActivity.class);
         startActivity(intent);
     }
