@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:backgroundTint="?attr/colorOnPrimary"
-    tools:context=".StatisticsFragment">
+    tools:context=".controller.main.home.StatisticsFragment">
 
     <View
         android:id="@+id/view"

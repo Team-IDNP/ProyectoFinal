@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:backgroundTint="?attr/colorOnPrimary"
-    tools:context=".HomeFragment">
+    tools:context=".controller.main.HomeFragment">
 
     <FrameLayout
         android:id="@+id/content_fragment"

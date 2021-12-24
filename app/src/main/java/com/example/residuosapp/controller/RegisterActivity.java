@@ -1,6 +1,5 @@
-package com.example.residuosapp;
+package com.example.residuosapp.controller;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,9 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.residuosapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -31,71 +28,96 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialize Firebase Auth
+        // Inicializar Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
         name = findViewById(R.id.name);
         last = findViewById(R.id.lastName);
         mail = findViewById(R.id.email);
         pass = findViewById(R.id.password);
-
     }
 
+    // Revisar si un usuario ya inicio sesion
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-
+            cargarMainActivity(currentUser);
         }
     }
 
+    /**
+     * Registra un usuario con los valores de los edittext
+     *
+     * @param v boton
+     */
     public void registerAccount(View v) {
         String email = mail.getText().toString();
         String password = pass.getText().toString();
         String names = name.getText().toString();
         String lastName = last.getText().toString();
 
+        // Validar datos
         if (TextUtils.isEmpty(names)) {
             name.setError("Ingrese nombres");
             name.requestFocus();
-        } else if (TextUtils.isEmpty(lastName)) {
+            return;
+        }
+        if (TextUtils.isEmpty(lastName)) {
             last.setError("Ingrese apellidos");
             last.requestFocus();
-        } else if (TextUtils.isEmpty(email)) {
+            return;
+        }
+        if (TextUtils.isEmpty(email)) {
             mail.setError("Ingrese correo");
             mail.requestFocus();
-        } else if (TextUtils.isEmpty(password)) {
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
             pass.setError("Ingrese contraseña");
             pass.requestFocus();
-        } else {
-            //Aquí Guardado de usuario y de datos de sesion
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-                    });
+            return;
         }
+
+        // Intentar guardar usuario en Firebase
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Exitoso
+                        Log.d(TAG, "createUserWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        cargarMainActivity(user);
+                    } else {
+                        // Error
+                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(
+                                RegisterActivity.this,
+                                "Error al crear cuenta.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
     }
 
-    private void updateUI(FirebaseUser user) {
-        // TODO: hacer otras cosas
-        if (user != null)
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+    /**
+     * Carga la actividad principal
+     *
+     * @param user Usuario de firebase
+     */
+    private void cargarMainActivity(FirebaseUser user) {
+        // TODO: Almacenar en el modelo
+        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
     }
 
+    /**
+     * Regresar a la actividad de inicio de sesion
+     *
+     * @param v boton
+     */
     public void loginScreen(View v) {
         onBackPressed();
     }
+
 }
