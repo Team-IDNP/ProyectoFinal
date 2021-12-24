@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.residuosapp.R;
+import com.example.residuosapp.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -107,7 +108,12 @@ public class RegisterActivity extends AppCompatActivity {
      * @param user Usuario de firebase
      */
     private void cargarMainActivity(FirebaseUser user) {
-        // TODO: Almacenar en el modelo
+        Usuario.Companion.set(
+                this,
+                user.getDisplayName(),
+                user.getEmail(),
+                user.getPhotoUrl()
+        );
         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
     }
 

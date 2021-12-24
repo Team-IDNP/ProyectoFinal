@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.residuosapp.R;
+import com.example.residuosapp.model.Usuario;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -177,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param v boton
      */
     public void register(View v) {
+        getPreferences(MODE_PRIVATE);
         startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
 
@@ -186,7 +188,12 @@ public class LoginActivity extends AppCompatActivity {
      * @param user Usuario de firebase, despues de iniciar sesion
      */
     private void cargarMainActivity(FirebaseUser user) {
-        // TODO: Almacenar en el modelo
+        Usuario.Companion.set(
+                this,
+                user.getDisplayName(),
+                user.getEmail(),
+                user.getPhotoUrl()
+        );
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
