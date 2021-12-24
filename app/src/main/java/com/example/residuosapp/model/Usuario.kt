@@ -45,5 +45,17 @@ class Usuario private constructor(
             editor.apply()
             return Usuario(nombre, correo, fotoUrl?.toString())
         }
+
+        /**
+         * Elimina al usuario
+         */
+        fun eliminar(ctx: Activity){
+            val sharedPreferences = ctx.getSharedPreferences("usuario", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.remove("nombre")
+            editor.remove("correo")
+            editor.remove("fotoUrl")
+            editor.apply()
+        }
     }
 }

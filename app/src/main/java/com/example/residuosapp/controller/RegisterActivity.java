@@ -14,6 +14,7 @@ import com.example.residuosapp.R;
 import com.example.residuosapp.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "REGISTER_ACTIVITY";
@@ -89,6 +90,18 @@ public class RegisterActivity extends AppCompatActivity {
                         // Exitoso
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
+
+                        if (user == null) {
+                            throw new RuntimeException("Usuario de Firebase es null a pesar " +
+                                    "de crearse correctamente");
+                        }
+
+                        // Actualizar el nombre del usuario
+                        UserProfileChangeRequest res = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(names)
+                                .build();
+                        user.updateProfile(res);
+
                         cargarMainActivity(user);
                     } else {
                         // Error

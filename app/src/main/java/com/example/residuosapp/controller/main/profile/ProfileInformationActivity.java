@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.example.residuosapp.R;
 import com.example.residuosapp.controller.LoginActivity;
+import com.example.residuosapp.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileInformationActivity extends AppCompatActivity {
@@ -24,6 +25,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
     public void cerrarSesion(View view) {
         FirebaseAuth.getInstance().signOut();
+        Usuario.Companion.eliminar(this);
         Intent i = new Intent(this, LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);

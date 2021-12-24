@@ -1,8 +1,11 @@
 package com.example.residuosapp.controller.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +19,17 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.residuosapp.controller.main.profile.ProfileInformationActivity;
 import com.example.residuosapp.R;
 import com.example.residuosapp.controller.main.profile.TabFragmentAdapter;
+import com.example.residuosapp.model.Usuario;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     TabFragmentAdapter adapter;
+
+    private Usuario usuario;
 
     public ProfileFragment() {
     }
@@ -35,6 +43,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        usuario = Usuario.Companion.get(requireActivity());
+
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -90,7 +100,8 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         TextView toolbarT = getActivity().findViewById(R.id.toolbar_title);
-        toolbarT.setText("Michael Jordan");
+        String nombreUsuario = usuario.getNombre();
+        toolbarT.setText(nombreUsuario == null ? "Usuario" : nombreUsuario);
     }
 
     public void openInformationProfile(View v) {
