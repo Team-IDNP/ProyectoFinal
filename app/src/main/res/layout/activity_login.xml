@@ -108,6 +108,7 @@
             app:iconTint="#951F1F"
             app:strokeWidth="3dp" />
 
+        <!--
         <Button
             android:id="@+id/button4"
             android:layout_width="match_parent"
@@ -139,6 +140,7 @@
             app:iconSize="35dp"
             app:iconTint="#951F1F"
             app:strokeWidth="3dp" />
+        -->
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
