@@ -5,11 +5,10 @@ import android.content.Context
 import android.net.Uri
 
 class Usuario private constructor(
-        val nombre: String?,
-        val correo: String?,
-        val fotoUrl: String?,
+    val nombre: String?,
+    val correo: String?,
+    val fotoUrl: String?,
 ) {
-    val companion = Companion
     companion object {
         /**
          * Recupera los datos del usuario que ha iniciado sesion
@@ -49,7 +48,7 @@ class Usuario private constructor(
         /**
          * Elimina al usuario
          */
-        fun eliminar(ctx: Activity){
+        fun eliminar(ctx: Activity) {
             val sharedPreferences = ctx.getSharedPreferences("usuario", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.remove("nombre")
