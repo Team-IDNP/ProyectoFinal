@@ -1,4 +1,4 @@
-package com.example.residuosapp;
+package com.example.residuosapp.controller.main.profile;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

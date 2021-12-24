@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_addAlert"
-        android:name="com.example.residuosapp.AddAlertFragment"
+        android:name="com.example.residuosapp.controller.main.AddAlertFragment"
         android:label="@string/title_addAlerta"
         tools:layout="@layout/fragment_addalert" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.residuosapp.ProfileFragment"
+        android:name="com.example.residuosapp.controller.main.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

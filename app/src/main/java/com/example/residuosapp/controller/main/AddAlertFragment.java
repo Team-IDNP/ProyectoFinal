@@ -1,4 +1,5 @@
-package com.example.residuosapp;
+package com.example.residuosapp.controller.main;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.residuosapp.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -34,14 +36,8 @@ import javax.mail.internet.MimeMessage;
 
 public class AddAlertFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final int COD_SELECCIONA = 10;
     private static final int COD_FOTO = 20;
-
-
-    private String mParam1;
-    private String mParam2;
 
     GoogleMap mapAdd;
 
@@ -50,46 +46,31 @@ public class AddAlertFragment extends Fragment {
     ImageButton buttonUp;
     ImageView imgFoto;
 
-
-
     public AddAlertFragment() {
-        // Required empty public constructor
-    }
-
-    public static AddAlertFragment newInstance(String param1, String param2) {
-        AddAlertFragment fragment = new AddAlertFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_addalert,
                 container, false);
         //Carga Imagen ----------------
 
         buttonUp = view.findViewById(R.id.imageButtonUp);
-        imgFoto=(ImageView)view.findViewById(R.id.imgEvidence1);
+        imgFoto = (ImageView) view.findViewById(R.id.imgEvidence1);
         buttonUp.setOnClickListener(this::upImage);
 
 
         ///---------------------------
-
-
 
 
         Button button = view.findViewById(R.id.btn_report);
@@ -97,30 +78,18 @@ public class AddAlertFragment extends Fragment {
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapViewAddAlert);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
 
-
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(latLng);
-                        markerOptions.title("("+latLng.latitude+", "+latLng.longitude+")");
-                        googleMap.clear();
-                        googleMap.addMarker(markerOptions);
-                        positionAlert = latLng;
-                    }
-                });
-                mapAdd = googleMap;
-            }
+        mapFragment.getMapAsync(googleMap -> {
+            googleMap.setOnMapClickListener(latLng -> {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("(" + latLng.latitude + ", " + latLng.longitude + ")");
+                googleMap.clear();
+                googleMap.addMarker(markerOptions);
+                positionAlert = latLng;
+            });
+            mapAdd = googleMap;
         });
-
-
-
-
-
 
         return view;
     }
@@ -132,27 +101,24 @@ public class AddAlertFragment extends Fragment {
         toolbarT.setText("Nueva alerta");
     }
 
-    public void upImage(View v){
-        final CharSequence[] opciones={"Tomar Foto","Elegir de Galeria","Cancelar"};
-        final AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+    public void upImage(View v) {
+        final CharSequence[] opciones = {"Tomar Foto", "Elegir de Galeria", "Cancelar"};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Elige una Opción");
-        builder.setItems(opciones, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(opciones[i].equals("Tomar Foto")){
-                    //Activar camara
+        builder.setItems(opciones, (dialogInterface, i) -> {
+            if (opciones[i].equals("Tomar Foto")) {
+                // Activar camara
 
-                }
-                else{
-                    if (opciones[i].equals("Elegir de Galeria")){
-                        Intent intent=new Intent(Intent.ACTION_GET_CONTENT,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/");
-                        startActivityForResult(intent.createChooser(intent,"Seleccione"), COD_SELECCIONA);
-                    }
-                    else{
-                        dialogInterface.dismiss();
-                    }
+            } else {
+                if (opciones[i].equals("Elegir de Galeria")) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_GET_CONTENT,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    );
+                    intent.setType("image/");
+                    startActivityForResult(intent.createChooser(intent, "Seleccione"), COD_SELECCIONA);
+                } else {
+                    dialogInterface.dismiss();
                 }
             }
         });
@@ -163,17 +129,17 @@ public class AddAlertFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        switch (requestCode){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
             case COD_SELECCIONA:
-                Uri miPath=data.getData();
+                Uri miPath = data.getData();
                 imgFoto.setImageURI(miPath);
                 break;
         }
     }
 
-    public void sendEmail(View v){
+    public void sendEmail(View v) {
         //CREDENCIALES CORREO
         String appEmail = "";
         String appPassword = "";
@@ -245,7 +211,7 @@ public class AddAlertFragment extends Fragment {
                 result = "ERROR: COMPLETA LAS CREDENCIALES";
             } catch (Exception e) {
                 e.printStackTrace();
-               // return e.getMessage();
+                // return e.getMessage();
                 result = "ERROR: REVISA LAS CREDENCIALES";
             }
             return result;

@@ -20,7 +20,7 @@
             android:name=".controller.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".ProfileInformationActivity"
+            android:name=".controller.main.profile.ProfileInformationActivity"
             android:exported="true" />
 
         <meta-data

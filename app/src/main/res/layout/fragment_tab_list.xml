@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TabListFragment">
+    tools:context=".controller.main.profile.TabListFragment">
 
     <TableLayout
         android:layout_width="match_parent"
