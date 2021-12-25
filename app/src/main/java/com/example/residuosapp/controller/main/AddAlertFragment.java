@@ -255,7 +255,6 @@ public class AddAlertFragment extends Fragment {
                     for (int iL = 0;iL<listDist.size();++iL){
                         optionsDist[iL] = listDist.get(iL).getName();
                     }
-                    Log.e("sadfwed", "sdfsdf");
                     ArrayAdapter<String> optionsProvAdapter = new ArrayAdapter<>(getContext(),
                             R.layout.support_simple_spinner_dropdown_item, optionsDist);
                     spDist.setAdapter(optionsProvAdapter);
@@ -403,7 +402,7 @@ public class AddAlertFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("Hola", "Si entra"+requestCode);
+       
         if(resultCode == Activity.RESULT_OK){
             switch (requestCode) {
                 case COD_FOTO:
