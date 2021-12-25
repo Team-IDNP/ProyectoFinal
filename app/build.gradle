@@ -15,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        useLibrary 'org.apache.http.legacy'
     }
 
     buildTypes {
@@ -54,9 +55,10 @@ dependencies {
     implementation 'com.sun.mail:android-activation:1.6.6'
     implementation 'com.google.android.gms:play-services-maps:18.0.0'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.google.android.libraries.places:places:2.2.0'
 
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
 
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
@@ -64,6 +66,7 @@ dependencies {
 
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-database:20.0.3'
 
 
     testImplementation 'junit:junit:4.+'

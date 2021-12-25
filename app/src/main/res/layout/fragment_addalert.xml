@@ -97,31 +97,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/colorSecondary"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 tools:layout_margin="10dp">
 
                 <ImageView
                     android:id="@+id/imgEvidence1"
                     android:layout_width="85dp"
                     android:layout_height="75dp"
-                    android:src="@android:drawable/ic_menu_gallery" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="85dp"
-                    android:layout_height="75dp"
-                    android:src="@android:drawable/ic_menu_gallery" />
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="85dp"
-                    android:layout_height="75dp"
+                    android:layout_gravity="center"
                     android:src="@android:drawable/ic_menu_gallery" />
 
                 <ImageButton
                     android:id="@+id/imageButtonUp"
-                    android:layout_width="62dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:src="@android:drawable/stat_sys_upload" />
 
