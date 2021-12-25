@@ -2,6 +2,7 @@ package com.example.residuosapp.controller.main.home;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,18 +11,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.residuosapp.R;
+import com.example.residuosapp.model.Alert;
+import com.example.residuosapp.model.Departamento;
 import com.example.residuosapp.model.Marcador;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class MapFragment extends Fragment {
 
     private GoogleMap mapG;
+    ArrayList<Marcador> marcadores;
+    public static boolean a = true;
 
     public MapFragment() {
     }
@@ -39,16 +50,45 @@ public class MapFragment extends Fragment {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-        ArrayList<Marcador> marcadores = Marcador.Companion.getMarcadores();
+
+
+        marcadores = Marcador.Companion.getMarcadores();
+
 
         mapFragment.getMapAsync(googleMap -> {
             mapG = googleMap;
-            for (Marcador m: marcadores) {
-                MarkerOptions marcador = new MarkerOptions();
-                marcador.position(new LatLng(m.getLatitud(), m.getLongitud()));
-                mapG.addMarker(marcador);
+        });
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = db.getReference("alerts");
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mapG.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    Alert u = ds.getValue(Alert.class);
+                    if (u != null) {
+                        String lat =  u.getUbiLat();
+                        String lon = u.getUbiLong();
+                        LatLng sydney = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+                        mapG.addMarker(new MarkerOptions()
+                                .position(sydney)
+                                .title("Marker"));
+                        mapG.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+
+
 
         return v;
     }

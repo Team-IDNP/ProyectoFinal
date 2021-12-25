@@ -43,11 +43,14 @@ import com.example.residuosapp.model.Alert;
 import com.example.residuosapp.model.Departamento;
 import com.example.residuosapp.model.Distrito;
 import com.example.residuosapp.model.Provincia;
+import com.example.residuosapp.model.Usuario;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -561,9 +564,9 @@ public class AddAlertFragment extends Fragment {
         a.setUbiLat(positionAlert.latitude+"");
         a.setUbiLong(positionAlert.longitude+"");
         a.setUsuarioId("U-2");
-
-
-
+        FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
+        String idUser = u.getEmail();
+        a.setUsuarioId(idUser);
         db.getReference("alerts").child(a.getId()).updateChildren(a.toMap());
         Toast.makeText(getContext(), "Guardado", Toast.LENGTH_LONG).show();
 
