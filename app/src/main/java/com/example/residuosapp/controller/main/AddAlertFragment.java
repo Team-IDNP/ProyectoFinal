@@ -506,6 +506,7 @@ public class AddAlertFragment extends Fragment {
         String appEmail = "alertaresiduos2021@gmail.com";
         String appPassword = "alertaRResiduos123";
         String to = "mriosca@unsa.edu.pe"; //correo de municipalidad
+
         String subject = "Prueba";
         //AQUI SE RECOGEN LOS DATOS
 
