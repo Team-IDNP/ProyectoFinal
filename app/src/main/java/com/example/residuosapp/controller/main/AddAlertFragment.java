@@ -5,12 +5,18 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -44,20 +50,33 @@ import com.example.residuosapp.model.Departamento;
 import com.example.residuosapp.model.Distrito;
 import com.example.residuosapp.model.Provincia;
 import com.example.residuosapp.model.Usuario;
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +115,13 @@ public class AddAlertFragment extends Fragment {
     String imagen64encode;
 
     Spinner spDep, spProv, spDist;
+    String mapImageUrl;
+    String filePath;
+    String MYfilePath;
+    String myphotoUrl;
+    View viewG;
+
+    StorageReference sr;
 
     public AddAlertFragment() {
     }
@@ -115,6 +141,9 @@ public class AddAlertFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_addalert,
                 container, false);
         //Carga Imagen ----------------
+
+        viewG = view;
+        sr = FirebaseStorage.getInstance().getReference();
 
         buttonUp = view.findViewById(R.id.imageButtonUp);
         imgFoto = view.findViewById(R.id.imgEvidence1);
@@ -136,8 +165,16 @@ public class AddAlertFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //sendEmail(view);
-                createAlert();
+                if(MYfilePath == null){
+                    Toast.makeText(getContext(), "No se estableció una foto", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(positionAlert == null){
+                    Toast.makeText(getContext(), "No se estableció un marcador en el mapa", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                SaveAsyncTask task = new SaveAsyncTask();
+                task.execute();
             }
         });
 
@@ -156,7 +193,34 @@ public class AddAlertFragment extends Fragment {
 
             });
             mapAdd = googleMap;
+            mapAdd.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+            LocationManager lm = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                            99);
+
+                }
+            }
+            Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            Log.e("ubi ", latitude+" "+longitude);
+            LatLng sydney = new LatLng(latitude, longitude);
+            mapAdd.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            mapAdd.animateCamera(CameraUpdateFactory.zoomTo(12));
+            mapAdd.getUiSettings().setZoomControlsEnabled(true);
+            mapAdd.setMyLocationEnabled(true);
+            mapAdd.getUiSettings().setMyLocationButtonEnabled(true);
+            //mapAdd.getUiSettings().setMapToolbarEnabled(true);
         });
+
 
         //Departamento
         db.getReference("departamento").addValueEventListener(new ValueEventListener() {
@@ -171,12 +235,13 @@ public class AddAlertFragment extends Fragment {
                     listDept.add(s);
                 }
                 Collections.sort(listDept, Departamento.NameAZComparator);
-                optionsDep = new String[listDept.size()];
+                //SE movio a provincia para hacer más rápida la app
+                /**optionsDep = new String[listDept.size()];
                 for (int i = 0;i<listDept.size();++i){
                     optionsDep[i] = listDept.get(i).getName();
                 }
-                ArrayAdapter<String> optionsDepAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, optionsDep);
-                spDep.setAdapter(optionsDepAdapter);
+                ArrayAdapter<String> optionsDepAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, optionsDep);
+                spDep.setAdapter(optionsDepAdapter);*/
             }
 
             @Override
@@ -226,6 +291,14 @@ public class AddAlertFragment extends Fragment {
                         deptProvMap.put(s.getDepartamentoId(), tmp);
                     }
                 }
+
+                optionsDep = new String[listDept.size()];
+                for (int i = 0;i<listDept.size();++i){
+                    optionsDep[i] = listDept.get(i).getName();
+                }
+                ArrayAdapter<String> optionsDepAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, optionsDep);
+                spDep.setAdapter(optionsDepAdapter);
+
                 listProv = deptProvMap.get(deptT);
                 if (listProv != null) {
                     Collections.sort(listProv, Provincia.NameAZComparator);
@@ -358,16 +431,9 @@ public class AddAlertFragment extends Fragment {
                 }
 
                 String nameImage="";
-                File fileImage = new File(Environment.getExternalStorageDirectory(), "FotosResiduos");
-                boolean e = fileImage.exists();
-                if(!e){
-                    e = fileImage.mkdirs();
-                }
-
-                if(e){
-                    nameImage = (System.currentTimeMillis()/100)+".png";
-                }
-                path = Environment.getExternalStorageDirectory() + File.separator + "FotosResiduos" + File.separator + nameImage;
+                File fileImage = new File(getFilePath());
+                nameImage = FirebaseAuth.getInstance().getCurrentUser().getUid()+(System.currentTimeMillis()/100)+".png";
+                path = fileImage + File.separator+nameImage;
                 File img = new File(path);
                 Intent intent;
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -421,12 +487,14 @@ public class AddAlertFragment extends Fragment {
 
                         }
                     });
+                    MYfilePath = path;
                     Bitmap bitmap = BitmapFactory.decodeFile(path);
                     imgFoto.setImageBitmap(bitmap);
                     break;
 
                 case COD_SELECCIONA:
                     Uri miPath = data.getData();
+                    MYfilePath = miPath.getPath();
                     imgFoto.setImageURI(miPath);
                     break;
             }
@@ -435,18 +503,27 @@ public class AddAlertFragment extends Fragment {
 
     public void sendEmail(View v) {
         //CREDENCIALES CORREO
-        String appEmail = "";
-        String appPassword = "";
-        String to = "";
+        String appEmail = "alertaresiduos2021@gmail.com";
+        String appPassword = "alertaRResiduos123";
+        String to = "mriosca@unsa.edu.pe"; //correo de municipalidad
         String subject = "Prueba";
         //AQUI SE RECOGEN LOS DATOS
 
         //END
-        String message = "<!DOCTYPE html><html lang=\"en\" xmlns=\"https://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"> <meta name=\"x-apple-disable-message-reformatting\"> <title></title> <!--[if mso]> <style> table {border-collapse:collapse;border-spacing:0;border:none;margin:0;} div, td {padding:0;} div {margin:0 !important;} </style> <noscript> <xml> <o:OfficeDocumentSettings> <o:PixelsPerInch>96</o:PixelsPerInch> </o:OfficeDocumentSettings> </xml> </noscript> <![endif]--> <style> table, td, div, h1, p { font-family: Arial, sans-serif; } </style></head><body style=\"margin:0;padding:0;word-spacing:normal;background-color:#939297;\"> <div role=\"article\" aria-roledescription=\"email\" lang=\"en\" style=\"text-size-adjust:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#939297;\"><h2 color=\"red\">¡Alerta!<h2> <p>Buenos dias señores de la municipalidad <p><br><p>"+
+
+
+        String message = "<!DOCTYPE html><html lang=\"en\" xmlns=\"https://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"> <meta name=\"x-apple-disable-message-reformatting\"> <title></title> <!--[if mso]> <style> table {border-collapse:collapse;border-spacing:0;border:none;margin:0;} div, td {padding:0;} div {margin:0 !important;} </style> <noscript> <xml> <o:OfficeDocumentSettings> <o:PixelsPerInch>96</o:PixelsPerInch> </o:OfficeDocumentSettings> </xml> </noscript> <![endif]--> <style> table, td, div, h1, p { font-family: Arial, sans-serif; } </style></head><body style=\"margin:0;padding:0;word-spacing:normal;background-color:#939297;\"> <div role=\"article\" aria-roledescription=\"email\" lang=\"en\" style=\"text-size-adjust:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#939297;\"><h2 color=\"red\">¡Alerta!<h2> "+
+                "<p>Buenos dias señores de la municipalidad <p><br><p>"+
+                "<br>"+
+                "<p>Se reporta un alerta por desperdicios en: <p><br><p>"+
                 "Departamento:"+deptTName+"<br>"+
-                "Departamento:"+provTName+"<br>"+
-                "Departamento:"+distTName+"<br>"+
+                "Provincia:"+provTName+"<br>"+
+                "Distrito:"+distTName+"<br>"+
+                "<img src=\""+mapImageUrl+"\" width=\"500\" height=\"600\"/>"+
+                "<img src=\""+myphotoUrl+"\" width=\"500\" height=\"600\"/>"+
                 "<p></div></body></html>";
+        //Log.e("MENSAJE HTML", message);
+
         sendEmailWithGmail(appEmail, appPassword, to, subject, message);
     }
 
@@ -500,6 +577,8 @@ public class AddAlertFragment extends Fragment {
         protected String doInBackground(String... params) {
             String result = "Reporte enviado";
             try {
+
+
                 Message mimeMessage = new MimeMessage(session);
                 mimeMessage.setFrom(new InternetAddress(from));
                 mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
@@ -528,25 +607,21 @@ public class AddAlertFragment extends Fragment {
         protected void onPostExecute(String result) {
             progressDialog.dismiss();
             Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+            createAlert(myphotoUrl);
+            mapImageUrl = null;
+            myphotoUrl = null;
+            imgFoto.setImageBitmap(null);
         }
     }
 
-    void createAlert(){
+    void createAlert(String myphotoUrl){
         String dateT;
 
         Alert a = new Alert();
         a.setId("A-"+generateId());
         a.setDistritoId(distT);
 
-        Bitmap bm=((BitmapDrawable)imgFoto.getDrawable()).getBitmap();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] b = baos.toByteArray();
-        imagen64encode = Base64.encodeToString(b, Base64.URL_SAFE | Base64.NO_WRAP);
-
-
-        a.setMultimedia(imagen64encode);
+        a.setMultimediaSend(myphotoUrl);
 
         Date date = new Date();
         Date enrollmentDate = new Date(date.getTime());
@@ -581,6 +656,138 @@ public class AddAlertFragment extends Fragment {
         idMap.put("idAlert", idInt+"");
         db.getReference("idCont").updateChildren(idMap);
         return idS;
+    }
+
+    public void captureScreen() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            @Override public void onSnapshotReady(Bitmap snapshot) {
+
+                saveImage(snapshot);
+                try {
+                    Uri uri = Uri.fromFile(new File(filePath));
+                    //subida de archivop
+                    StorageReference file = sr.child("fotos").child(uri.getLastPathSegment());
+                    file.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            file.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+                            {
+                                @Override
+                                public void onSuccess(Uri downloadUrl)
+                                {
+                                    mapImageUrl = downloadUrl.toString();
+                                }
+                            });
+
+                        }
+                    });
+
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    Log.d("ImageCapture", "IOException");
+                    Log.d("ImageCapture", e.getMessage());
+                }
+
+            }
+        };
+        mapAdd.snapshot(callback);
+    }
+
+
+
+
+
+    public void upPhoto() {
+        Uri uri = Uri.fromFile(new File(MYfilePath));
+        //subida de archivop
+        StorageReference file = sr.child("fotos").child(uri.getLastPathSegment());
+        file.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                file.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+                {
+                    @Override
+                    public void onSuccess(Uri downloadUrl)
+                    {
+                        myphotoUrl = downloadUrl.toString();
+                        MYfilePath = null;
+                    }
+                });
+
+            }
+        });
+    }
+
+
+
+
+    private void saveImage(Bitmap finalBitmap) {
+
+        String root = getFilePath();
+
+        File myDir = new File(root);
+        myDir.mkdirs();
+        String fname = FirebaseAuth.getInstance().getCurrentUser().getUid()+System.currentTimeMillis() + ".jpeg";
+        filePath = fname;
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        Log.i("LOAD", root + fname);
+        filePath = root + File.separator+fname;
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+            Log.i("LOAD", "Guardado");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFilePath(){
+        ContextWrapper cw = new ContextWrapper(requireContext());
+        File pD = cw.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return pD.getPath();
+    }
+
+
+    private class SaveAsyncTask extends AsyncTask<String, String, String> {
+
+        private ProgressDialog progressDialog;
+
+        public SaveAsyncTask() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getContext(), "", "Generando reporte...", true);
+            progressDialog.setCancelable(false);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "Reporte generado";
+            captureScreen();
+            upPhoto();
+            while(mapImageUrl == null || myphotoUrl == null){
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            progressDialog.setMessage(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progressDialog.dismiss();
+            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+            sendEmail(viewG);
+        }
     }
 
 

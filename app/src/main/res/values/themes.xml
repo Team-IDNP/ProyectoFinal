@@ -38,4 +38,10 @@
         <item name="cornerFamilyBottomLeft">cut</item>
         <item name="cornerFamilyBottomRight">cut</item>
     </style-->
+
+    <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:statusBarColor">@color/back</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Design.BottomSheetDialog</item>
+    </style>
 </resources>

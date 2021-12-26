@@ -9,7 +9,22 @@
     android:backgroundTint="?attr/colorOnPrimary"
     tools:context=".controller.main.home.StatisticsFragment">
 
-    <View
+    <!--View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="?attr/colorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_marginBottom="100dp" /-->
+
+    <com.example.residuosapp.controller.Barras
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -23,12 +38,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_marginBottom="100dp" />
-
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.jjoe64.graphview.GraphView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

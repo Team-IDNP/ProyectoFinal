@@ -96,9 +96,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="10dp"
                 android:background="?attr/colorSecondary"
-                android:orientation="vertical"
-                tools:layout_margin="10dp">
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/imgEvidence1"
@@ -126,8 +126,8 @@
             <fragment
                 android:id="@+id/mapViewAddAlert"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="277dp"
-                android:layout_height="189dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp" />
 

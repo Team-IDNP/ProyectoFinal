@@ -5,61 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".controller.main.profile.TabListFragment">
 
-    <TableLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_alert"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="221dp"
-                android:layout_height="wrap_content"
-                android:text="Lugar" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="192dp"
-                android:layout_height="wrap_content"
-                android:text="Estado" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-        </TableRow>
-
-    </TableLayout>
+        android:layout_height="match_parent" />
 </FrameLayout>

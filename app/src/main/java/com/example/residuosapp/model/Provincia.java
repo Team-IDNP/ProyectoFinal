@@ -8,7 +8,7 @@ public class Provincia {
     String departamentoId;
     String nombreProv;
 
-    Provincia(){}
+    public Provincia(){}
 
     public String getNombreProv() {
         return nombreProv;

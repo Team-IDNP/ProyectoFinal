@@ -12,22 +12,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.residuosapp.controller.main.profile.ProfileInformationActivity;
+import com.example.residuosapp.controller.main.profile.DialogInformation;
 import com.example.residuosapp.R;
 import com.example.residuosapp.controller.main.profile.TabFragmentAdapter;
 import com.example.residuosapp.model.Usuario;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ProfileFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     TabFragmentAdapter adapter;
+    TextView dateCTV;
 
     private Usuario usuario;
 
@@ -55,6 +60,13 @@ public class ProfileFragment extends Fragment {
                 openInformationProfile(v);
             }
         });
+        dateCTV = v.findViewById(R.id.date_create_user);
+        FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
+        Date creationDate = new Date(Long.parseLong(u.getMetadata().getCreationTimestamp()+""));
+        SimpleDateFormat formatDate = new SimpleDateFormat("MMMM");
+        String dateS = formatDate.format(creationDate);
+        dateCTV.setText("Registrado desde "+creationDate.getDay()+" de "+dateS+" del "+(creationDate.getYear()+1900));
+
 
 
         tabLayout = v.findViewById(R.id.tab_layout);
@@ -105,9 +117,8 @@ public class ProfileFragment extends Fragment {
     }
 
     public void openInformationProfile(View v) {
-        // TODO: Cambiar a Fragment
-        Intent intent = new Intent(getActivity(), ProfileInformationActivity.class);
-        startActivity(intent);
+        DialogFragment df = DialogInformation.newInstance();
+        df.show(requireActivity().getSupportFragmentManager(), "dialog");
     }
 
 }

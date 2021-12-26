@@ -73,7 +73,7 @@ public class TabMapFragment extends Fragment {
                 mapTab.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     Alert u = ds.getValue(Alert.class);
-                    if (u != null && u.getUsuarioId().toString().equals(correoActual)) {
+                    if (u != null && u.getUsuarioId().equals(correoActual)) {
                         String lat =  u.getUbiLat();
                         String lon = u.getUbiLong();
                         LatLng sydney = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
@@ -83,6 +83,7 @@ public class TabMapFragment extends Fragment {
                         mapTab.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                     }
                 }
+                mapTab.animateCamera(CameraUpdateFactory.zoomTo(5));
             }
 
             @Override

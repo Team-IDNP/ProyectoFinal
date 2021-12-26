@@ -11,11 +11,12 @@ public class Alert {
     String id;
     String distritoId;
     String estado;
-    String multimedia;
+    String multimediaSend;
     String ubiLat;
     String ubiLong;
     String usuarioId;
     String fecha;
+    public String lugar = "NULL";
 
     public Alert(){}
 
@@ -43,12 +44,12 @@ public class Alert {
         this.estado = estado;
     }
 
-    public String getMultimedia() {
-        return multimedia;
+    public String getMultimediaSend() {
+        return multimediaSend;
     }
 
-    public void setMultimedia(String multimedia) {
-        this.multimedia = multimedia;
+    public void setMultimediaSend(String multimediaSend) {
+        this.multimediaSend = multimediaSend;
     }
 
     public String getUbiLat() {
@@ -87,7 +88,7 @@ public class Alert {
         Map<String, Object> map = new HashMap<>();
         map.put("distritoId", getDistritoId());
         map.put("estado", getEstado());
-        map.put("multimedia", getMultimedia());
+        map.put("multimedia", getMultimediaSend());
         map.put("ubiLat", getUbiLat());
         map.put("ubiLong", getUbiLong());
         map.put("usuarioId", getUsuarioId());

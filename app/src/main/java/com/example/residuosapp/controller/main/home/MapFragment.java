@@ -1,8 +1,12 @@
 package com.example.residuosapp.controller.main.home;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -57,37 +61,53 @@ public class MapFragment extends Fragment {
 
         mapFragment.getMapAsync(googleMap -> {
             mapG = googleMap;
-        });
-
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = db.getReference("alerts");
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase db = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = db.getReference("alerts");
+            // Read from the database
+            myRef.addValueEventListener(new ValueEventListener() {
 
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mapG.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    Alert u = ds.getValue(Alert.class);
-                    if (u != null) {
-                        String lat =  u.getUbiLat();
-                        String lon = u.getUbiLong();
-                        LatLng sydney = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
-                        mapG.addMarker(new MarkerOptions()
-                                .position(sydney)
-                                .title("Marker"));
-                        mapG.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    mapG.clear();
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Alert u = ds.getValue(Alert.class);
+                        if (u != null) {
+                            String lat =  u.getUbiLat();
+                            String lon = u.getUbiLong();
+                            LatLng sydney = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+                            mapG.addMarker(new MarkerOptions()
+                                    .position(sydney)
+                                    .title("Marker"));
+                            mapG.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                        }
                     }
+                    mapG.animateCamera(CameraUpdateFactory.zoomTo(5));
+                    mapG.getUiSettings().setZoomControlsEnabled(true);
+
+
+                    if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    99);
+
+                        }
+                    }
+
+                    mapG.setMyLocationEnabled(true);
+                    mapG.getUiSettings().setMyLocationButtonEnabled(true);
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
+                }
+            });
+
         });
-
 
 
         return v;

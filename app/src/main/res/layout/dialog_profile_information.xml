@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.main.profile.ProfileInformationActivity">
+    tools:context=".controller.main.profile.DialogInformation">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                 android:src="@drawable/ic_dashboard_black_24dp" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/date_create_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Registrado desde Abril, 2017"
@@ -75,6 +75,30 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorOnPrimary"
                 android:text="INFORMACIÓN" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="210dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="Correo electronico:" />
+
+                    <TextView
+                        android:id="@+id/email_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+                </TableRow>
+
+            </TableLayout>
 
             <Button
                 android:id="@+id/button"
