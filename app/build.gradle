@@ -66,8 +66,12 @@ dependencies {
 
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
+// Updated upstream
     implementation 'com.google.firebase:firebase-database:20.0.3'
 
+//=======
+    implementation 'com.google.firebase:firebase-database:19.2.1'
+//>>>>>>> Stashed changes
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -15,6 +15,7 @@ import com.example.residuosapp.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "REGISTER_ACTIVITY";
@@ -24,6 +25,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText pass;
 
     private FirebaseAuth mAuth;
+    FirebaseDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Inicializar Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
 
         name = findViewById(R.id.name);
         last = findViewById(R.id.lastName);

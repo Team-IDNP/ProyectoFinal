@@ -127,7 +127,7 @@
                 android:id="@+id/mapViewAddAlert"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="277dp"
-                android:layout_height="269dp"
+                android:layout_height="189dp"
                 android:layout_gravity="center"
                 android:layout_margin="10dp" />
 
