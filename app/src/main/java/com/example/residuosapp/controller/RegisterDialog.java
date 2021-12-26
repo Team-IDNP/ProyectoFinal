@@ -1,12 +1,17 @@
 package com.example.residuosapp.controller;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,29 +22,53 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegisterActivity extends AppCompatActivity {
+import java.util.concurrent.Executor;
+
+public class RegisterDialog extends DialogFragment {
     private static final String TAG = "REGISTER_ACTIVITY";
     private EditText name;
     private EditText last;
     private EditText mail;
     private EditText pass;
+    Button bClose;
+    Button ret;
+    Button bRegister;
+
 
     private FirebaseAuth mAuth;
     FirebaseDatabase db;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+    public static RegisterDialog newInstance() {
+        return new RegisterDialog();
+    }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.dialog_register, container, false);
         // Inicializar Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
 
-        name = findViewById(R.id.name);
-        last = findViewById(R.id.lastName);
-        mail = findViewById(R.id.email);
-        pass = findViewById(R.id.password);
+        name = v.findViewById(R.id.name);
+        last = v.findViewById(R.id.lastName);
+        mail = v.findViewById(R.id.email);
+        pass = v.findViewById(R.id.password);
+        bClose = v.findViewById(R.id.btn_close);
+        bClose.setOnClickListener(view -> dismiss());
+        ret = v.findViewById(R.id.button_return);
+        ret.setOnClickListener(view -> dismiss());
+        bRegister = v.findViewById(R.id.button_register);
+        bRegister.setOnClickListener(view -> registerAccount());
+        return v;
     }
 
     // Revisar si un usuario ya inicio sesion
@@ -56,9 +85,9 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Registra un usuario con los valores de los edittext
      *
-     * @param v boton
+     * @param
      */
-    public void registerAccount(View v) {
+    public void registerAccount() {
         String email = mail.getText().toString();
         String password = pass.getText().toString();
         String names = name.getText().toString();
@@ -88,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Intentar guardar usuario en Firebase
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
+                .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
                         // Exitoso
                         Log.d(TAG, "createUserWithEmail:success");
@@ -110,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
                         // Error
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
                         Toast.makeText(
-                                RegisterActivity.this,
+                                requireActivity(),
                                 "Error al crear cuenta.",
                                 Toast.LENGTH_SHORT
                         ).show();
@@ -125,21 +154,12 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void cargarMainActivity(FirebaseUser user) {
         Usuario.Companion.set(
-                this,
+                requireActivity(),
                 user.getDisplayName(),
                 user.getEmail(),
                 user.getPhotoUrl()
         );
-        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-    }
-
-    /**
-     * Regresar a la actividad de inicio de sesion
-     *
-     * @param v boton
-     */
-    public void loginScreen(View v) {
-        onBackPressed();
+        startActivity(new Intent(requireActivity(), MainActivity.class));
     }
 
 }

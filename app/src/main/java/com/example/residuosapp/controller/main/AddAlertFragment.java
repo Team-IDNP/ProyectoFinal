@@ -296,7 +296,8 @@ public class AddAlertFragment extends Fragment {
                 for (int i = 0;i<listDept.size();++i){
                     optionsDep[i] = listDept.get(i).getName();
                 }
-                ArrayAdapter<String> optionsDepAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, optionsDep);
+                ArrayAdapter<String> optionsDepAdapter = new ArrayAdapter<>(getContext(),
+                        R.layout.support_simple_spinner_dropdown_item, optionsDep);
                 spDep.setAdapter(optionsDepAdapter);
 
                 listProv = deptProvMap.get(deptT);
@@ -475,17 +476,14 @@ public class AddAlertFragment extends Fragment {
         if(resultCode == Activity.RESULT_OK){
             switch (requestCode) {
                 case COD_FOTO:
-                    MediaScannerConnection.scanFile(this.getActivity(), new String[]{path}, null, new MediaScannerConnection.MediaScannerConnectionClient() {
+                    MediaScannerConnection.scanFile(this.getActivity(), new String[]{path},
+                            null, new MediaScannerConnection.MediaScannerConnectionClient() {
 
                         @Override
-                        public void onScanCompleted(String s, Uri uri) {
-
-                        }
+                        public void onScanCompleted(String s, Uri uri) {}
 
                         @Override
-                        public void onMediaScannerConnected() {
-
-                        }
+                        public void onMediaScannerConnected() {}
                     });
                     MYfilePath = path;
                     Bitmap bitmap = BitmapFactory.decodeFile(path);

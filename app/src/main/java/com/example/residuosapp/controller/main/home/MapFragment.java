@@ -65,8 +65,6 @@ public class MapFragment extends Fragment {
             DatabaseReference myRef = db.getReference("alerts");
             // Read from the database
             myRef.addValueEventListener(new ValueEventListener() {
-
-
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     mapG.clear();

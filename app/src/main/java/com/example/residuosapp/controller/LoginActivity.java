@@ -9,8 +9,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.residuosapp.R;
+import com.example.residuosapp.controller.main.profile.DialogInformation;
 import com.example.residuosapp.model.Usuario;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -179,7 +181,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void register(View v) {
         getPreferences(MODE_PRIVATE);
-        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        RegisterDialog df = RegisterDialog.newInstance();
+        df.show(getSupportFragmentManager(), "register");
     }
 
     /**

@@ -22,9 +22,6 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.ResiduosApp"
         android:requestLegacyExternalStorage="true">
-        <activity
-            android:name=".controller.RegisterActivity"
-            android:exported="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
