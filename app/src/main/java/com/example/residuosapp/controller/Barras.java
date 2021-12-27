@@ -128,7 +128,6 @@ public class Barras extends View {
 
         paint.setStrokeWidth(60);
         paint.setColor(Color.BLUE);
-        //canvas.drawRect(temp1 - ancho, alto - alto / 3 - (peso * 10), temp1 + ancho, alto - alto / 3, paint);
         int lineB = alto - 50;
         int maxD = alto/5*4;
         int grosorUnit = maxD/max;

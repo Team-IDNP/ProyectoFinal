@@ -127,7 +127,6 @@ public class RegisterDialog extends DialogFragment {
                             throw new RuntimeException("Usuario de Firebase es null a pesar " +
                                     "de crearse correctamente");
                         }
-
                         // Actualizar el nombre del usuario
                         UserProfileChangeRequest res = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(names)

@@ -7,6 +7,7 @@ public class Distrito {
 
     String provinciaId;
     String nombreDist;
+    String emailDist;
 
     Distrito(){}
 
@@ -32,6 +33,14 @@ public class Distrito {
 
     public void setNombreDist(String nombreDist) {
         this.nombreDist = nombreDist;
+    }
+
+    public String getEmailDist() {
+        return emailDist;
+    }
+
+    public void setEmailDist(String emailDist) {
+        this.emailDist = emailDist;
     }
 
     public String getName() {

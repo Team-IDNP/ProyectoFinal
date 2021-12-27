@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +55,6 @@ public class MapFragment extends Fragment {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.mapView);
 
-
-
         marcadores = Marcador.Companion.getMarcadores();
 
 
@@ -85,18 +84,16 @@ public class MapFragment extends Fragment {
 
 
                     if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     99);
 
                         }
-                    }
-
-                    mapG.setMyLocationEnabled(true);
-                    mapG.getUiSettings().setMyLocationButtonEnabled(true);
+                    }//else{
+                        mapG.setMyLocationEnabled(true);
+                        mapG.getUiSettings().setMyLocationButtonEnabled(true);
+                   // }
                 }
 
                 @Override

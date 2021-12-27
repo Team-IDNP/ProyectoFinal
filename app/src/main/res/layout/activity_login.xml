@@ -102,11 +102,11 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="#000000"
             android:textStyle="bold"
-            app:icon="@drawable/ic_launcher_background"
+            app:icon="@drawable/ic_google"
             app:iconPadding="0dp"
             app:iconSize="35dp"
-            app:iconTint="#951F1F"
-            app:strokeWidth="3dp" />
+            app:strokeWidth="3dp"
+            tools:iconTintMode="multiply" />
 
         <!--
         <Button

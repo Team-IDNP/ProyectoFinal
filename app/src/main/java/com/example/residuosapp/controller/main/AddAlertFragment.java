@@ -45,6 +45,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.residuosapp.R;
+import com.example.residuosapp.controller.MainActivity;
 import com.example.residuosapp.model.Alert;
 import com.example.residuosapp.model.Departamento;
 import com.example.residuosapp.model.Distrito;
@@ -120,6 +121,7 @@ public class AddAlertFragment extends Fragment {
     String MYfilePath;
     String myphotoUrl;
     View viewG;
+    Distrito forEmail;
 
     StorageReference sr;
 
@@ -203,9 +205,8 @@ public class AddAlertFragment extends Fragment {
                     && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                            99);
-
+                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                            98);
                 }
             }
             Location location = lm.getLastKnownLocation(lm.getBestProvider(criteria, false));
@@ -388,6 +389,7 @@ public class AddAlertFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 distT = listDist.get(i).getId();
                 distTName = listDist.get(i).getName();
+                forEmail = listDist.get(i);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
@@ -425,11 +427,15 @@ public class AddAlertFragment extends Fragment {
         builder.setTitle("Elige una Opción");
         builder.setItems(opciones, (dialogInterface, i) -> {
             if (opciones[i].equals("Tomar Foto")) {
-                if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                if(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
                 }
+
+
 
                 String nameImage="";
                 File fileImage = new File(getFilePath());
@@ -503,7 +509,7 @@ public class AddAlertFragment extends Fragment {
         //CREDENCIALES CORREO
         String appEmail = "alertaresiduos2021@gmail.com";
         String appPassword = "alertaRResiduos123";
-        String to = "mriosca@unsa.edu.pe"; //correo de municipalidad
+        String to = forEmail.getEmailDist(); //correo de municipalidad
 
         String subject = "Prueba";
         //AQUI SE RECOGEN LOS DATOS
@@ -790,4 +796,27 @@ public class AddAlertFragment extends Fragment {
     }
 
 
+    /*@Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.e("resultPermiso", "Entra");
+        if (requestCode == 99) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                P2 = false;
+            } else {
+                Toast.makeText(requireActivity(), "PERMISSION NOT GRANTED", Toast.LENGTH_LONG).show();
+                requireActivity().finish(); System.exit(0);
+            }
+        }
+        if (requestCode == 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                P1 = false;
+            } else {
+                Toast.makeText(requireActivity(), "PERMISSION FOR CAMERA NOT GRANTED", Toast.LENGTH_LONG).show();
+                requireActivity().finish(); System.exit(0);
+            }
+        }
+    }*/
 }
